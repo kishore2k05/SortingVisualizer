@@ -1,49 +1,61 @@
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class quicksort {
 
-    public static ArrayList<Integer> quicksort(ArrayList<Integer> arr) {
-        if (arr.size() <= 1) {
-            return arr;
+    public static void sort(int[] array, List<int[]> steps) {
+        steps.add(Arrays.copyOf(array, array.length));
+        quicksortInPlace(array, 0, array.length - 1, steps);
+    }
+    
+    private static void quicksortInPlace(int[] arr, int low, int high, List<int[]> steps) {
+        if (low < high) {
+            int partitionIndex = partition(arr, low, high, steps);
+            quicksortInPlace(arr, low, partitionIndex - 1, steps);
+            quicksortInPlace(arr, partitionIndex + 1, high, steps);
         }
+    }
 
+    private static int partition(int[] arr, int low, int high, List<int[]> steps) {
         Random rand = new Random();
-        Integer pivot = arr.get(rand.nextInt(arr.size()));
-
-        ArrayList<Integer> left = new ArrayList<>();
-        ArrayList<Integer> right = new ArrayList<>();
-        ArrayList<Integer> middle = new ArrayList<>();
-
-        for (Integer i : arr) {
-            if (i < pivot) {
-                left.add(i);
-            } else if (i > pivot) {
-                right.add(i);
-            } else {
-                middle.add(i);
+        int pivotIndex = rand.nextInt(high - low + 1) + low;
+        
+        int pivot = arr[pivotIndex];
+        swap(arr, pivotIndex, high); 
+        steps.add(Arrays.copyOf(arr, arr.length));
+        
+        int i = (low - 1);
+        
+        for (int j = low; j < high; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+                swap(arr, i, j);
+                steps.add(Arrays.copyOf(arr, arr.length));
             }
         }
+        swap(arr, i + 1, high);
+        steps.add(Arrays.copyOf(arr, arr.length));
+        return i + 1;
+    }
 
-        ArrayList<Integer> sortedLeft = quicksort(left);
-        ArrayList<Integer> sortedRight = quicksort(right);
-
-        ArrayList<Integer> result = new ArrayList<>(sortedLeft);
-        result.addAll(middle);
-        result.addAll(sortedRight);
-        
-        return result;
+    private static void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
     }
 
     public static void main(String[] args) {
-        // Initialize the array as a list in Java
-        ArrayList<Integer> arr = new ArrayList<>(Arrays.asList(3, 2, 5, 7, 9, 6));
+        int[] arr = {3, 2, 5, 7, 9, 6};
+        List<int[]> steps = new java.util.ArrayList<>();
 
-        System.out.println("Before: " + arr);
+        System.out.println("Before: " + Arrays.toString(arr));
         
-        ArrayList<Integer> sortedArr = quicksort(arr);
+        sort(arr, steps);
         
-        System.out.println("After: " + sortedArr);
+        System.out.println("After: " + Arrays.toString(arr));
+        for (int[] step : steps) {
+            System.out.println(Arrays.toString(step));
+        }
     }
 }

@@ -12,6 +12,13 @@ h1 {
     display: inline-block;
 }
 
+footer {
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 240px;
+}
+
 select {
     background-color: #c95c47; 
     color: white;             
@@ -28,6 +35,7 @@ select {
     top: 0;
     transform: translateY(0);
     transition: all 0.1s ease;
+    box-shadow: 0px 5px 0px 0px #9e4333, 0px 0px 0px 2px #3a626f;
 }
 
 select:hover {
@@ -46,3 +54,73 @@ select:focus {
     outline: none;
     box-shadow: 0 0 0 3px #578a87, 0px 5px 0px 0px #9e4333;
   }
+
+
+button {
+    background-color: #c95c47; 
+    color: white;             
+    border: none; 
+    border-radius: 5px;
+    padding: 10px 20px; 
+    font-family: monospace;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    top: 0;
+    transform: translateY(0);
+    transition: all 0.1s ease;
+    box-shadow: 0px 5px 0px 0px #9e4333, 0px 0px 0px 2px #3a626f;
+}
+
+button:hover {
+    background-color: #e0745f;
+    transform: translateY(-2px); 
+    box-shadow: 0px 7px 0px 0px #9e4333, 0px 0px 0px 2px #3a626f; 
+}
+  
+button:active {
+    background-color: #9e4333;
+    transform: translateY(3px); 
+    box-shadow: 0px 2px 0px 0px #9e4333, 0px 0px 0px 2px #3a626f;
+}
+
+button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px #578a87, 0px 5px 0px 0px #9e4333;
+}
+
+#visualization-container {
+    display: flex; 
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    height: auto;
+    margin: 20px auto;
+    border: none; 
+    padding: 0;
+}
+
+.bar {
+    width: 50px;
+    height: 40px;
+    margin: 0 5px;
+    background-color: transparent;
+    color: #c95c47;
+    border: 2px solid #578a87;
+    border-radius: 5px; 
+    text-align: center;
+    font-weight: bold;
+    line-height: 36px;
+    font-size: 1.2em;
+    transition: all 0.2s ease-out;
+    box-shadow: none; 
+}
+.bar:hover {
+    transform: translateY(-5px) scale(1.1); 
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 0 0 4px #e0745f; 
+    background-color: #c95c47; 
+    color: white; 
+    border-color: #c95c47;
+    cursor: pointer;
+}

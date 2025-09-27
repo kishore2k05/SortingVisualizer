@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sorting Visualizer - A tool for Algorithm Analysis</title>
-    <meta name="description" content="An interactive tool to visualize and compare popular DSA algorithms. Learn how they work!">
+    <meta name="description"
+        content="An interactive tool to visualize and compare popular DSA algorithms. Learn how they work!">
     <link rel="stylesheet" href="frontend.css">
 </head>
+
 <body>
     <h1>SORTING VISUALIZER</h1>
     <p>Visualize sorting algorithms in action.</p>
     <div id="controls">
-        <label for="algorithm">Select the type of algorithm you want to visualize: 
+        <label for="algorithm">Select the type of algorithm you want to visualize:
             <select name="Algo selection" id="algo">
                 <option value="bubble sort">Bubble sort</option>
                 <option value="insertion sort">Insertion sort</option>
@@ -21,5 +24,88 @@
             </select>
         </label>
     </div>
+    </div>
+
+    <div id="action-area">
+        <p>The backend will sort the numbers: [50, 10, 90, 30, 70] using the selected algorithm.</p>
+        <button onclick="requestSortFromBackend()">Run Sort Algorithm</button>
+        <p><strong>Backend Response:</strong> <span id="status-message"></span></p>
+        <div id="visualization-container">
+        </div>
+    </div>
+    <script>
+        const ANIMATION_SPEED_MS = 5000;
+
+        function renderArray(container, arr) {
+            container.innerHTML = '';
+            if (arr.length === 0) return;
+            arr.forEach(value => {
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.textContent = value;
+                container.appendChild(bar);
+            });
+        }
+
+        async function requestSortFromBackend() {
+            // SETUP CODE (main process DONT CHANGE)
+            const statusMessage = document.getElementById('status-message');
+            const visualizationContainer = document.getElementById('visualization-container');
+            const algoSelect = document.getElementById('algo');
+
+            const selectedAlgo = algoSelect.value;
+            const endpointName = selectedAlgo.split(' ')[0];
+            const url = `http://localhost:8000/sort/${endpointName}`;
+            const dataToSend = [50, 10, 90, 30, 70];
+
+            visualizationContainer.innerHTML = '';
+            statusMessage.textContent = `Requesting ${selectedAlgo} from Java backend...`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: dataToSend })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP Error! Status: ${response.status}. Message: ${errorText}`);
+                }
+
+                const sortedArrayText = await response.text();
+
+                const stepStrings = sortedArrayText.split('|');
+
+                const steps = stepStrings.map(stepString => {
+                    if (stepString.length > 2) {
+                        return stepString.replace(/[\[\]\s]/g, '')
+                            .split(',')
+                            .map(Number);
+                    }
+                    return [];
+                }).filter(arr => arr.length > 0);
+
+                statusMessage.textContent = `▶️ Visualizing ${steps.length} steps of ${selectedAlgo}...`;
+
+                for (let i = 0; i < steps.length; i++) {
+                    renderArray(visualizationContainer, steps[i]);
+                    await new Promise(resolve => setTimeout(resolve, ANIMATION_SPEED_MS));
+                }
+
+                statusMessage.textContent = `✅ Visualization Complete!`;
+
+            } catch (error) {
+                statusMessage.textContent = `❌ Connection Error. Is your Java server running? Details: ${error.message}`;
+                console.error("Fetch error:", error);
+                visualizationContainer.innerHTML = '';
+            }
+        }
+    </script>
+
+    <footer>
+        <p>Developed by Kishore Gowthaman</p>
+    </footer>
 </body>
+
 </html>
