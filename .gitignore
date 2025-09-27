@@ -1,0 +1,29 @@
+# Java compiled files
+*.class
+
+# Logs
+*.log
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# IDE folders
+.idea/
+.vscode/
+*.iml
+
+# Maven
+target/
+
+# Gradle
+build/
+.gradle/
+
+# Node.js (if frontend uses npm/yarn)
+node_modules/
+
+# Mac/Windows system files
+.DS_Store
+Thumbs.db
